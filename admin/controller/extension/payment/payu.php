@@ -1,12 +1,12 @@
 <?php
 
 
-class ControllerPaymentPayu extends Controller {
+class ControllerExtensionPaymentPayu extends Controller {
 
     private $error = array();
 
     public function index() {
-        $this->load->language('payment/payu');
+        $this->load->language('extension/payment/payu');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -17,7 +17,7 @@ class ControllerPaymentPayu extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -215,25 +215,25 @@ class ControllerPaymentPayu extends Controller {
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => false
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/payu', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('extension/payment/payu', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 
-        $data['action'] = $this->url->link('payment/payu', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('extension/payment/payu', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
 
         if (isset($this->request->post['payu_merchant'])) {
             $data['payu_merchant'] = $this->request->post['payu_merchant'];
@@ -286,7 +286,6 @@ class ControllerPaymentPayu extends Controller {
             $data['payu_status'] = $this->config->get('payu_status');
         }
 
-
         if (isset($this->request->post['payu_payment_gateway'])) {
             $data['payu_payment_gateway'] = $this->request->post['payu_payment_gateway'];
         } else {
@@ -303,14 +302,13 @@ class ControllerPaymentPayu extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
 
-
-
-        $this->response->setOutput($this->load->view('payment/payu.tpl', $data));
+        $this->response->setOutput($this->load->view('extension/payment/payu.tpl', $data));
     }
 
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/payu')) {
+        if (!$this->user->hasPermission('modify', 'extension/payment/payu')) {
             $this->error['warning'] = $this->language->get('error_permission');
+            var_dump('hell yeah');die;
         }
 
         if (!$this->request->post['payu_merchant']) {
@@ -321,12 +319,7 @@ class ControllerPaymentPayu extends Controller {
             $this->error['salt'] = $this->language->get('error_salt');
         }
 
-
-        if (!$this->error) {
-            return true;
-        } else {
-            return false;
-        }
+        return !$this->error;
     }
 
 }

@@ -1,11 +1,11 @@
 <?php
 
-class ControllerPaymentPayu extends Controller {
+class ControllerExtensionPaymentPayu extends Controller {
 
     public function index() {
         $data['button_confirm'] = $this->language->get('button_confirm');
         $this->load->model('checkout/order');
-        $this->language->load('payment/payu');
+        $this->language->load('extension/payment/payu');
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
 
@@ -57,9 +57,9 @@ class ControllerPaymentPayu extends Controller {
         $data['pg'] = $this->config->get('payu_payment_gateway');
         $data['bankcode'] = $this->config->get('payu_bankcode_val');
 
-        $data['surl'] = $this->url->link('payment/payu/callback'); //HTTP_SERVER.'/index.php?route=payment/payu/callback';
-        $data['Furl'] = $this->url->link('payment/payu/callback'); //HTTP_SERVER.'/index.php?route=payment/payu/callback';
-        $data['curl'] = $this->url->link('payment/payu/callback');
+        $data['surl'] = $this->url->link('extension/payment/payu/callback'); //HTTP_SERVER.'/index.php?route=payment/payu/callback';
+        $data['Furl'] = $this->url->link('extension/payment/payu/callback'); //HTTP_SERVER.'/index.php?route=payment/payu/callback';
+        $data['curl'] = $this->url->link('extension/payment/payu/callback');
         $key = $this->config->get('payu_merchant');
         $amount = (int) $order_info['total'];
         $productInfo = $data['productinfo'];
@@ -72,17 +72,17 @@ class ControllerPaymentPayu extends Controller {
         $data['user_credentials'] = $this->data['key'] . ':' . $this->data['email'];
         $data['Hash'] = $Hash;
         /////////////////////////////////////End Payu Vital  Information /////////////////////////////////
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/payu.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/payu.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/extension/payment/payu.tpl', $data);
         } else {
-            return $this->load->view('default/template/payment/payu.tpl', $data);
+            return $this->load->view('default/template/extension/payment/payu.tpl', $data);
         }
     }
 
     public function callback() {
 
         if (isset($this->request->post['key']) && ($this->request->post['key'] == $this->config->get('payu_merchant'))) {
-            $this->language->load('payment/payu');
+            $this->language->load('extension/payment/payu');
 
             $data['title'] = sprintf($this->language->get('heading_title'), $this->config->get('config_name'));
 
@@ -163,10 +163,10 @@ class ControllerPaymentPayu extends Controller {
                     $data['content_bottom'] = $this->load->controller('common/content_bottom');
                     $data['footer'] = $this->load->controller('common/footer');
                     $data['header'] = $this->load->controller('common/header');
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/payu_success.tpl')) {
-                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/payu_success.tpl', $data));
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu_success.tpl')) {
+                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/extension/payment/payu_success.tpl', $data));
                     } else {
-                        $this->response->setOutput($this->load->view('default/template/payment/payu_success.tpl', $data));
+                        $this->response->setOutput($this->load->view('default/template/extension/payment/payu_success.tpl', $data));
                     }
                 }
             } else {
@@ -183,22 +183,22 @@ class ControllerPaymentPayu extends Controller {
                     $payu_user_cancelled_order_status_id = $this->config->get('payu_user_cancelled_order_status_id');
                     $this->model_checkout_order->addOrderHistory($orderid, $payu_user_cancelled_order_status_id);
 
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/payu_cancelled.tpl')) {
-                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/payu_cancelled.tpl', $data));
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu_cancelled.tpl')) {
+                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/extension/payment/payu_cancelled.tpl', $data));
                     } else {
 
                         $payu_cancelled_order_status_id = $this->config->get('payu_cancelled_order_status_id');
                         $this->model_checkout_order->addOrderHistory($orderid, $payu_cancelled_order_status_id);
 
-                        $this->response->setOutput($this->load->view('default/template/payment/payu_cancelled.tpl', $data));
+                        $this->response->setOutput($this->load->view('default/template/extension/payment/payu_cancelled.tpl', $data));
                     }
                 } else {
 
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/payu_failure.tpl')) {
-                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/payu_failure.tpl', $data));
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu_failure.tpl')) {
+                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/extension/payment/payu_failure.tpl', $data));
                     } else {
 
-                        $this->response->setOutput($this->load->view('default/template/payment/payu_failure.tpl', $data));
+                        $this->response->setOutput($this->load->view('default/template/extension/payment/payu_failure.tpl', $data));
                     }
                 }
             }

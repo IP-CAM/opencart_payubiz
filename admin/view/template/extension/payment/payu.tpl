@@ -107,13 +107,11 @@
             <div class="col-sm-10">
               <select name="payu_payment_gateway" id="input-status" class="form-control">
 
-                <?php foreach ($data['payu_pg'] as  $payu_pg) { ?>
-                <?php if ($payu_pg['value'] == $payu_payment_gateway) {
-                     
-                 ?>
-                <option value="<?php echo $payu_pg['value']; ?>" selected="selected"><?php echo $payu_pg['name']; ?></option>
+                <?php foreach ($payu_pg as  $pg) { ?>
+                <?php if ($pg['value'] == $payu_payment_gateway) {?>
+                <option value="<?php echo $pg['value']; ?>" selected="selected"><?php echo $pg['name']; ?></option>
                 <?php } else { ?>
-                <option value="<?php echo $payu_pg['value']; ?>"><?php echo $payu_pg['name']; ?></option>
+                <option value="<?php echo $pg['value']; ?>"><?php echo $pg['name']; ?></option>
                 <?php } ?>
                 <?php } ?>
            
@@ -126,11 +124,11 @@
             <div class="col-sm-10">
               <select name="payu_bankcode_val" id="input-status" class="form-control">
 
-                <?php foreach ($data['payu_bankcode'] as  $payu_bankcode) { ?>
-                <?php if ($payu_bankcode['value'] == $payu_bankcode_val) {?>
-                <option value="<?php echo $payu_bankcode['value']; ?>" selected="selected"><?php echo $payu_bankcode['name']; ?></option>
+                <?php foreach ($payu_bankcode as  $bankcode) { ?>
+                <?php if ($bankcode['value'] == $bankcode_val) {?>
+                <option value="<?php echo $bankcode['value']; ?>" selected="selected"><?php echo $bankcode['name']; ?></option>
                 <?php } else { ?>
-                <option value="<?php echo $payu_bankcode['value']; ?>"><?php echo $payu_bankcode['name']; ?></option>
+                <option value="<?php echo $bankcode['value']; ?>"><?php echo $bankcode['name']; ?></option>
                 <?php } ?>
                 <?php } ?>
            
@@ -147,20 +145,6 @@
           </div>
         </div>
         <div class="tab-pane" id="tab-status">
-           <!-- <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
-            <div class="col-sm-10">
-              <select name="payu_order_status_id" id="input-order-status" class="form-control">
-                <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $payu_order_status_id) { ?>
-                <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                <?php } else { ?>
-                <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                <?php } ?>
-                <?php } ?>
-              </select>
-            </div>
-          </div> -->
 
             <div class="form-group">
             <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_captured_order_status; ?></label>
