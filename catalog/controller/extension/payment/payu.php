@@ -61,7 +61,7 @@ class ControllerExtensionPaymentPayu extends Controller {
         $data['Furl'] = $this->url->link('extension/payment/payu/callback'); //HTTP_SERVER.'/index.php?route=payment/payu/callback';
         $data['curl'] = $this->url->link('extension/payment/payu/callback');
         $key = $this->config->get('payu_merchant');
-        $amount = (int) $order_info['total'];
+
         $productInfo = $data['productinfo'];
         $firstname = $order_info['payment_firstname'];
         $email = $order_info['email'];
@@ -107,7 +107,6 @@ class ControllerExtensionPaymentPayu extends Controller {
 
             $this->load->model('checkout/order');
             $orderid = $this->request->post['txnid'] - 99090;
-            $order_info = $this->model_checkout_order->getOrder($orderid);
 
 
             $key = $this->request->post['key'];
@@ -139,7 +138,7 @@ class ControllerExtensionPaymentPayu extends Controller {
                 foreach ($this->request->post as $k => $val) {
                     $message .= $k . ': ' . $val . "\n";
                 }
-                if ($sentHashString == $this->request->post['hash']) {
+                if ($sentHashString == $responseHashString) {
 
 
 
