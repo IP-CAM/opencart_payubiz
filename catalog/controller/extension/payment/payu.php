@@ -7,8 +7,7 @@ class ControllerExtensionPaymentPayu extends Controller {
         $this->load->model('checkout/order');
         $this->language->load('extension/payment/payu');
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-
-
+        
         $data['merchant'] = $this->config->get('payu_merchant');
 
         $currency_code = $order_info['currency_code'];
@@ -30,13 +29,13 @@ class ControllerExtensionPaymentPayu extends Controller {
 
         /////////////////////////////////////Start Payu Vital  Information /////////////////////////////////
 
-        if ($this->config->get('payu_test') == 'demo')
-            $data['action'] = 'https://test.payu.in/_payment.php';
-        else
-            $data['action'] = 'https://secure.payu.in/_payment.php';
+        if ($this->config->get('payu_test') == 'demo') {
+            $data['action'] = 'https://test.payu.in/_payment';
+        } else {
+            $data['action'] = 'https://secure.payu.in/_payment';
+        }
 
-        $txnid = $this->session->data['order_id'] + 99090;
-
+        $txnid = $this->session->data['order_id'] + 9909110;
 
 
         $data['key'] = $this->config->get('payu_merchant');
@@ -45,8 +44,8 @@ class ControllerExtensionPaymentPayu extends Controller {
         $data['amount'] = $calculatedAmount_INR;
         $data['productinfo'] = 'opencart products information';
         $data['firstname'] = $order_info['payment_firstname'];
-        $data['Lastname'] = $order_info['payment_lastname'];
-        $data['Zipcode'] = $order_info['payment_postcode'];
+        $data['lastname'] = $order_info['payment_lastname'];
+        $data['zipcode'] = $order_info['payment_postcode'];
         $data['email'] = $order_info['email'];
         $data['phone'] = $order_info['telephone'];
         $data['address1'] = $order_info['payment_address_1'];
@@ -71,12 +70,9 @@ class ControllerExtensionPaymentPayu extends Controller {
 
         $data['user_credentials'] = $this->data['key'] . ':' . $this->data['email'];
         $data['Hash'] = $Hash;
+        $data['ismobileview'] = true;
         /////////////////////////////////////End Payu Vital  Information /////////////////////////////////
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/extension/payment/payu.tpl', $data);
-        } else {
-            return $this->load->view('default/template/extension/payment/payu.tpl', $data);
-        }
+        return $this->load->view('extension/payment/payu', $data);
     }
 
     public function callback() {
@@ -106,7 +102,7 @@ class ControllerExtensionPaymentPayu extends Controller {
             $data['text_failure_wait'] = sprintf($this->language->get('text_failure_wait'), $this->url->link('checkout/cart'));
 
             $this->load->model('checkout/order');
-            $orderid = $this->request->post['txnid'] - 99090;
+            $orderid = $this->request->post['txnid'] - 9909110;
 
 
             $key = $this->request->post['key'];
@@ -120,10 +116,6 @@ class ControllerExtensionPaymentPayu extends Controller {
             $keyArray = explode("|", $keyString);
             $reverseKeyArray = array_reverse($keyArray);
             $reverseKeyString = implode("|", $reverseKeyArray);
-
-
-
-
 
             if (isset($this->request->post['status']) && $this->request->post['status'] == 'success') {
 
@@ -140,10 +132,7 @@ class ControllerExtensionPaymentPayu extends Controller {
                 }
                 if ($sentHashString == $responseHashString) {
 
-
-
                     if ($this->request->post['unmappedstatus'] == 'captured') {
-
 
                         $payu_captured_order_status_id = $this->config->get('payu_captured_order_status_id');
                         $this->model_checkout_order->addOrderHistory($orderid, $payu_captured_order_status_id);
@@ -151,8 +140,6 @@ class ControllerExtensionPaymentPayu extends Controller {
                         $payu_auth_order_status_id = $this->config->get('payu_auth_order_status_id');
                         $this->model_checkout_order->addOrderHistory($orderid, $payu_auth_order_status_id);
                     }
-
-
 
                     $this->model_checkout_order->addOrderHistory($this->request->post['txnid'], $this->config->get('payu_order_status_id'), $message, false);
                     $data['continue'] = $this->url->link('checkout/success');
@@ -162,11 +149,8 @@ class ControllerExtensionPaymentPayu extends Controller {
                     $data['content_bottom'] = $this->load->controller('common/content_bottom');
                     $data['footer'] = $this->load->controller('common/footer');
                     $data['header'] = $this->load->controller('common/header');
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu_success.tpl')) {
-                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/extension/payment/payu_success.tpl', $data));
-                    } else {
-                        $this->response->setOutput($this->load->view('default/template/extension/payment/payu_success.tpl', $data));
-                    }
+
+                    $this->response->setOutput($this->load->view('extension/payment/payu_success', $data));
                 }
             } else {
 
@@ -182,28 +166,15 @@ class ControllerExtensionPaymentPayu extends Controller {
                     $payu_user_cancelled_order_status_id = $this->config->get('payu_user_cancelled_order_status_id');
                     $this->model_checkout_order->addOrderHistory($orderid, $payu_user_cancelled_order_status_id);
 
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu_cancelled.tpl')) {
-                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/extension/payment/payu_cancelled.tpl', $data));
-                    } else {
+                    $payu_cancelled_order_status_id = $this->config->get('payu_cancelled_order_status_id');
+                    $this->model_checkout_order->addOrderHistory($orderid, $payu_cancelled_order_status_id);
 
-                        $payu_cancelled_order_status_id = $this->config->get('payu_cancelled_order_status_id');
-                        $this->model_checkout_order->addOrderHistory($orderid, $payu_cancelled_order_status_id);
-
-                        $this->response->setOutput($this->load->view('default/template/extension/payment/payu_cancelled.tpl', $data));
-                    }
+                    $this->response->setOutput($this->load->view('extension/payment/payu_cancelled', $data));
                 } else {
-
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payu_failure.tpl')) {
-                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/extension/payment/payu_failure.tpl', $data));
-                    } else {
-
-                        $this->response->setOutput($this->load->view('default/template/extension/payment/payu_failure.tpl', $data));
-                    }
+                    $this->response->setOutput($this->load->view('extension/payment/payu_failure', $data));
                 }
             }
         }
-
-
 
         if ($this->request->post['unmappedstatus'] == 'initiated') {
 
@@ -231,4 +202,3 @@ class ControllerExtensionPaymentPayu extends Controller {
     }
 
 }
-
