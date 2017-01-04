@@ -22,7 +22,7 @@ $_['entry_geo_zone'] = 'Geo Zone:';
 $_['entry_status'] = 'Status:';
 $_['entry_sort_order'] = 'Sort Order:';
 $_['help_salt'] = 'Enter the Salt value provided by PayU.';
-$_['help_total'] = 'PayU will be disabled if order total is less than PayU total.';
+$_['help_total'] = 'The checkout total the order must reach before this payment method becomes active.';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify payment PayU!';
