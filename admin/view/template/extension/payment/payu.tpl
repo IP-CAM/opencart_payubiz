@@ -125,7 +125,7 @@
               <select name="payu_bankcode_val" id="input-status" class="form-control">
 
                 <?php foreach ($payu_bankcode as  $bankcode) { ?>
-                <?php if ($bankcode['value'] == $bankcode_val) {?>
+                <?php if ($bankcode['value'] == $payu_bankcode_val) {?>
                 <option value="<?php echo $bankcode['value']; ?>" selected="selected"><?php echo $bankcode['name']; ?></option>
                 <?php } else { ?>
                 <option value="<?php echo $bankcode['value']; ?>"><?php echo $bankcode['name']; ?></option>
